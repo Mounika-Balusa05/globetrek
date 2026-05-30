@@ -11,6 +11,14 @@ Built as a portfolio project to demonstrate real-world frontend development skil
 
 ---
 
+## 📸 Screenshots
+
+| 🌞 Light Mode | 🌙 Dark Mode |
+|--------------|-------------|
+| ![Light Mode](./screenshots/image.png) | ![Dark Mode](./screenshots/image2.png) |
+
+---
+
 ## ✨ Features
 
 - 🏠 **Explore Page** — Hero slideshow, popular destination cards, quick itinerary planner and budget estimator widgets

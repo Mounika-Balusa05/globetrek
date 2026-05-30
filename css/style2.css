@@ -1,0 +1,445 @@
+/* =============================================
+   GLOBETREK PHASE 2 — ANIMATIONS & ENHANCEMENTS
+   Add this at the bottom of style.css
+   ============================================= */
+
+/* ---- SKELETON LOADERS ---- */
+/* INTERVIEW NOTE: Skeleton screens feel faster than spinners
+   because users see the layout shape immediately */
+.skeleton {
+  background: linear-gradient(90deg,
+    var(--border) 25%,
+    var(--bg-secondary) 50%,
+    var(--border) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-card {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  aspect-ratio: 3/3.5;
+}
+
+.skeleton-card .skeleton-img {
+  width: 100%; height: 70%;
+}
+
+.skeleton-card .skeleton-line {
+  margin: 10px 12px 6px;
+  height: 14px;
+  width: 70%;
+}
+
+.skeleton-card .skeleton-line-sm {
+  margin: 0 12px;
+  height: 11px;
+  width: 40%;
+}
+
+/* ---- STAGGERED CARD ANIMATIONS ---- */
+/* Cards reveal one by one with delay — much more polished than all-at-once */
+.dest-card {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: cardReveal 0.45s ease forwards;
+}
+
+@keyframes cardReveal {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Each card gets a slightly later delay — stagger effect */
+.dest-card:nth-child(1) { animation-delay: 0.05s; }
+.dest-card:nth-child(2) { animation-delay: 0.12s; }
+.dest-card:nth-child(3) { animation-delay: 0.19s; }
+.dest-card:nth-child(4) { animation-delay: 0.26s; }
+.dest-card:nth-child(5) { animation-delay: 0.33s; }
+.dest-card:nth-child(6) { animation-delay: 0.40s; }
+.dest-card:nth-child(7) { animation-delay: 0.47s; }
+.dest-card:nth-child(8) { animation-delay: 0.54s; }
+
+/* ---- PAGE TRANSITION ANIMATION ---- */
+.page.active {
+  animation: pageSlide 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes pageSlide {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ---- SEARCH AUTOCOMPLETE DROPDOWN ---- */
+.search-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 520px;
+}
+
+.autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0; right: 0;
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  z-index: 200;
+  overflow: hidden;
+  animation: dropDown 0.18s ease;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+@keyframes dropDown {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.autocomplete-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background var(--transition);
+  border-bottom: 1px solid var(--border);
+}
+
+.autocomplete-item:last-child { border-bottom: none; }
+
+.autocomplete-item:hover, .autocomplete-item.highlighted {
+  background: var(--accent-light);
+}
+
+.autocomplete-img {
+  width: 40px; height: 32px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.autocomplete-info { flex: 1; min-width: 0; }
+.autocomplete-name { font-size: 0.875rem; font-weight: 600; font-family: 'Poppins', sans-serif; color: var(--text-primary); }
+.autocomplete-meta { font-size: 0.75rem; color: var(--text-muted); }
+
+.autocomplete-rating {
+  font-size: 0.75rem;
+  color: var(--warning);
+  font-weight: 600;
+}
+
+.autocomplete-empty {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ---- UNSPLASH GALLERY ---- */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 1rem;
+}
+
+.gallery-img {
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: transform 0.25s, opacity 0.25s;
+  width: 100%;
+}
+
+.gallery-img:hover { transform: scale(1.04); opacity: 0.9; }
+
+.gallery-loading {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: var(--text-muted);
+  gap: 10px;
+  font-size: 0.875rem;
+}
+
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- ENHANCED MODAL ---- */
+.modal-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.25rem;
+  overflow-x: auto;
+}
+
+.modal-tab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-muted);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition);
+  margin-bottom: -1px;
+}
+
+.modal-tab-btn.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.modal-tab-panel { display: none; }
+.modal-tab-panel.active { display: block; }
+
+/* ---- NEARBY PLACES ---- */
+.nearby-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.nearby-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.nearby-card:hover { background: var(--accent-light); }
+
+.nearby-icon {
+  width: 34px; height: 34px;
+  background: var(--accent-light);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--accent);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.nearby-name { font-size: 0.8rem; font-weight: 600; color: var(--text-primary); }
+.nearby-type { font-size: 0.7rem; color: var(--text-muted); }
+.nearby-rating { font-size: 0.7rem; color: var(--warning); margin-top: 2px; }
+
+/* ---- MAP EMBED ---- */
+.map-container {
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  height: 220px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  position: relative;
+}
+
+.map-placeholder {
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.map-placeholder i { font-size: 2rem; margin-bottom: 8px; display: block; }
+.map-placeholder p { font-size: 0.8rem; }
+.map-placeholder a {
+  font-size: 0.8rem;
+  color: var(--accent);
+  font-weight: 600;
+  display: inline-block;
+  margin-top: 6px;
+}
+
+/* ---- FLOATING ACTION BUTTON (mobile) ---- */
+.fab {
+  display: none;
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 52px; height: 52px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  z-index: 150;
+  box-shadow: 0 4px 20px rgba(37,99,235,0.45);
+  transition: transform 0.2s, box-shadow 0.2s;
+  align-items: center;
+  justify-content: center;
+}
+
+.fab:hover { transform: scale(1.1); box-shadow: 0 6px 24px rgba(37,99,235,0.55); }
+
+@media (max-width: 860px) { .fab { display: flex; } }
+
+/* ---- SCROLL TO TOP BUTTON ---- */
+.scroll-top {
+  position: fixed;
+  bottom: 5rem;
+  right: 1.5rem;
+  width: 40px; height: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  border-radius: 50%;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  z-index: 149;
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition);
+}
+
+.scroll-top.visible { display: flex; }
+.scroll-top:hover { background: var(--accent); color: white; border-color: var(--accent); }
+
+/* ---- STAT CHIPS on destination cards ---- */
+.dest-stats {
+  display: flex;
+  gap: 6px;
+  margin-top: 6px;
+  flex-wrap: wrap;
+}
+
+.dest-stat-chip {
+  font-size: 0.68rem;
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(4px);
+  color: white;
+  padding: 2px 7px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+/* ---- NOTIFICATION DOT animation ---- */
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+.badge { animation: pulse 2s infinite; }
+
+/* ---- GUIDE CARD hover ---- */
+.guide-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(37,99,235,0.08) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.25s;
+  border-radius: var(--radius-md);
+  pointer-events: none;
+}
+
+.guide-card { position: relative; }
+.guide-card:hover::after { opacity: 1; }
+
+/* ---- TOPBAR search box focus glow ---- */
+.search-box:focus-within {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+}
+
+/* ---- FORM inputs in dark mode ---- */
+[data-theme="dark"] .form-select,
+[data-theme="dark"] .form-input {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+/* ---- WIDGET CARDS hover effect ---- */
+.widget-card {
+  transition: transform 0.25s, box-shadow 0.25s, background var(--transition);
+}
+
+.widget-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ---- ITIN day hover ---- */
+.itin-day:hover .itin-day-content { opacity: 0.85; }
+
+/* ---- LOADING OVERLAY ---- */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  z-index: 5;
+  flex-direction: column;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+/* ---- PROGRESS BAR (budget) ---- */
+.budget-bar-wrap {
+  margin-top: 6px;
+  height: 5px;
+  background: var(--border);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.budget-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- RESPONSIVE IMPROVEMENTS ---- */
+@media (max-width: 640px) {
+  .hero-content { padding: 1.5rem 1.5rem 3rem; }
+  .hero-content h1 { font-size: 1.6rem; }
+  .section-block { padding: 1.25rem 1rem 0; }
+  .widgets-row { padding: 1rem; }
+  .page-header { padding: 1.25rem 1rem 0.75rem; }
+  .destinations-grid-full { padding: 0 1rem 1rem; }
+  .guide-grid { padding: 0 1rem 1rem; }
+  .dest-filters { padding: 0 1rem 1rem; }
+  .itinerary-layout, .budget-layout { padding: 0 1rem 1rem; }
+  .weather-result-area { padding: 0 1rem 1rem; }
+  .weather-search-row { padding: 0 1rem 1rem; }
+  .saved-tabs { padding: 0 1rem 1rem; }
+  .guide-tabs { padding: 0 1rem 1rem; }
+}

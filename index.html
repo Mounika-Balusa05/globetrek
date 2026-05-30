@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GlobeTrek — Explore smarter, plan better, travel easier</title>
+
+  <!-- Google Fonts: Poppins for headings, Inter for body -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Font Awesome icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/style2.css" />
+</head>
+<body>
+
+  <!-- ===================== SIDEBAR ===================== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <i class="fa-solid fa-globe"></i>
+      <span>GlobeTrek</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#" class="nav-item active" data-page="explore">
+        <i class="fa-solid fa-house"></i><span>Explore</span>
+      </a>
+      <a href="#" class="nav-item" data-page="destinations">
+        <i class="fa-solid fa-location-dot"></i><span>Destinations</span>
+      </a>
+      <a href="#" class="nav-item" data-page="itinerary">
+        <i class="fa-solid fa-plane"></i><span>Itinerary Planner</span>
+      </a>
+      <a href="#" class="nav-item" data-page="weather">
+        <i class="fa-solid fa-cloud-sun"></i><span>Weather</span>
+      </a>
+      <a href="#" class="nav-item" data-page="budget">
+        <i class="fa-solid fa-wallet"></i><span>Budget Planner</span>
+      </a>
+      <a href="#" class="nav-item" data-page="saved">
+        <i class="fa-solid fa-heart"></i><span>Saved Trips</span>
+      </a>
+      <a href="#" class="nav-item" data-page="guide">
+        <i class="fa-solid fa-book-open"></i><span>Travel Guide</span>
+      </a>
+    </nav>
+
+    <!-- Trending section in sidebar -->
+    <div class="sidebar-trending">
+      <p class="trending-label">Trending</p>
+      <div class="trending-list" id="trendingList"></div>
+    </div>
+
+    <!-- Sidebar promo card -->
+    <div class="sidebar-promo">
+      <p>Let's make your next adventure amazing!</p>
+      <button class="btn-promo" onclick="showPage('explore')">Explore Now</button>
+    </div>
+  </aside>
+
+  <!-- ===================== MAIN CONTENT ===================== -->
+  <main class="main-content" id="mainContent">
+
+    <!-- TOP NAVBAR -->
+    <header class="topbar">
+      <button class="menu-toggle" id="menuToggle">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="globalSearch" placeholder="Search destinations, places, activities..." />
+        <button class="search-btn" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="icon-btn" id="themeToggle" title="Toggle theme">
+          <i class="fa-solid fa-sun" id="themeIcon"></i>
+        </button>
+        <button class="icon-btn" onclick="showPage('saved')" title="Saved trips">
+          <i class="fa-solid fa-heart"></i>
+          <span class="badge" id="savedBadge">0</span>
+        </button>
+        <button class="btn-primary" onclick="showPage('saved')">My Trips</button>
+      </div>
+    </header>
+
+    <!-- ===== PAGE: EXPLORE (HOME) ===== -->
+    <section class="page active" id="page-explore">
+
+      <!-- HERO SECTION -->
+      <div class="hero-section">
+        <div class="hero-slides" id="heroSlides">
+          <!-- Slides injected by JS -->
+        </div>
+        <div class="hero-content">
+          <p class="hero-eyebrow">✈ Your next journey starts here</p>
+          <h1>Discover Your<br/>Next Adventure</h1>
+          <p class="hero-sub">Explore beautiful places, plan your perfect trip<br/>and create unforgettable memories.</p>
+          <button class="btn-hero" onclick="showPage('destinations')">Explore Destinations</button>
+        </div>
+        <div class="hero-dots" id="heroDots"></div>
+      </div>
+
+      <!-- POPULAR DESTINATIONS -->
+      <div class="section-block">
+        <div class="section-header">
+          <h2>Popular Destinations</h2>
+          <a href="#" onclick="showPage('destinations')" class="view-all">View all →</a>
+        </div>
+        <div class="destinations-grid" id="popularDestinations"></div>
+      </div>
+
+      <!-- BOTTOM WIDGETS ROW -->
+      <div class="widgets-row">
+        <!-- Mini Weather Widget -->
+        <div class="widget-card" id="miniWeatherWidget">
+          <div class="widget-title">
+            <i class="fa-solid fa-cloud-sun"></i>
+            <span>Weather in <strong id="miniWeatherCity">Bali, Indonesia</strong></span>
+          </div>
+          <div class="mini-weather-content" id="miniWeatherContent">
+            <div class="weather-loading">Loading weather...</div>
+          </div>
+        </div>
+
+        <!-- Itinerary Quick Start -->
+        <div class="widget-card">
+          <div class="widget-title">
+            <i class="fa-solid fa-map-marked-alt"></i>
+            <span>Plan Your Itinerary</span>
+          </div>
+          <div class="quick-itinerary">
+            <select id="quickDest" class="form-select">
+              <option value="">Select Destination</option>
+              <option>Bali, Indonesia</option>
+              <option>Paris, France</option>
+              <option>Tokyo, Japan</option>
+              <option>Maldives</option>
+              <option>Switzerland</option>
+              <option>Santorini, Greece</option>
+            </select>
+            <select id="quickDays" class="form-select">
+              <option value="">Number of Days</option>
+              <option>3 Days</option>
+              <option>5 Days</option>
+              <option>7 Days</option>
+              <option>10 Days</option>
+            </select>
+            <select id="quickBudget" class="form-select">
+              <option value="">Budget Range</option>
+              <option>Budget ($500–$1000)</option>
+              <option>Mid-range ($1000–$3000)</option>
+              <option>Luxury ($3000+)</option>
+            </select>
+            <button class="btn-primary w-full" id="quickItineraryBtn">Generate Itinerary</button>
+          </div>
+        </div>
+
+        <!-- Budget Estimator -->
+        <div class="widget-card">
+          <div class="widget-title">
+            <i class="fa-solid fa-calculator"></i>
+            <span>Budget Estimator <small id="budgetDaysLabel">(5 Days)</small></span>
+          </div>
+          <div class="budget-rows" id="quickBudgetRows"></div>
+          <div class="budget-total-row">
+            <span>Total Estimate</span>
+            <span class="budget-total-amount" id="quickBudgetTotal">$1,000</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: DESTINATIONS ===== -->
+    <section class="page" id="page-destinations">
+      <div class="page-header">
+        <h2>Destinations</h2>
+        <p>Explore top destinations around the world</p>
+      </div>
+      <div class="dest-filters">
+        <select class="form-select" id="filterCountry">
+          <option>All Countries</option>
+          <option>Asia</option>
+          <option>Europe</option>
+          <option>Americas</option>
+          <option>Africa</option>
+        </select>
+        <select class="form-select" id="filterCategory">
+          <option>All Categories</option>
+          <option>Beach</option>
+          <option>Mountains</option>
+          <option>City</option>
+          <option>Nature</option>
+          <option>Culture</option>
+        </select>
+        <select class="form-select" id="filterSort">
+          <option>Sort by: Popular</option>
+          <option>Sort by: Rating</option>
+          <option>Sort by: Name</option>
+        </select>
+        <div class="dest-search-wrap">
+          <input type="text" id="destSearch" class="form-input" placeholder="Search destinations..." />
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+      </div>
+      <div class="destinations-grid-full" id="destinationsGrid"></div>
+    </section>
+
+    <!-- ===== PAGE: ITINERARY PLANNER ===== -->
+    <section class="page" id="page-itinerary">
+      <div class="page-header">
+        <h2>Itinerary Planner</h2>
+        <p>Plan your perfect trip</p>
+      </div>
+      <div class="itinerary-layout">
+        <div class="itinerary-form-card">
+          <h3>Trip Details</h3>
+          <label>Destination</label>
+          <select class="form-select" id="itinDest">
+            <option>Bali, Indonesia</option>
+            <option>Paris, France</option>
+            <option>Tokyo, Japan</option>
+            <option>Maldives</option>
+            <option>Switzerland</option>
+            <option>Santorini, Greece</option>
+            <option>New York, USA</option>
+            <option>Dubai, UAE</option>
+          </select>
+          <label>Number of Days</label>
+          <input type="number" class="form-input" id="itinDays" value="5" min="1" max="30" />
+          <label>Travelers</label>
+          <select class="form-select" id="itinTravelers">
+            <option>Solo</option>
+            <option>2 Adults</option>
+            <option>Family (4)</option>
+            <option>Group (6+)</option>
+          </select>
+          <label>Budget Range</label>
+          <select class="form-select" id="itinBudget">
+            <option>Budget</option>
+            <option>Medium</option>
+            <option>Luxury</option>
+          </select>
+          <button class="btn-primary w-full" id="generateItinBtn" style="margin-top:1rem">Generate Itinerary</button>
+        </div>
+        <div class="itinerary-result" id="itineraryResult">
+          <div class="itin-placeholder">
+            <i class="fa-solid fa-map-location-dot"></i>
+            <p>Fill in the details and click Generate to see your personalized day-wise itinerary!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: WEATHER ===== -->
+    <section class="page" id="page-weather">
+      <div class="page-header">
+        <h2>Weather</h2>
+        <p>Check current weather and forecast</p>
+      </div>
+      <div class="weather-search-row">
+        <input type="text" id="weatherCity" class="form-input" placeholder="Search for a city..." value="Bali" />
+        <button class="btn-primary" id="weatherSearchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
+      </div>
+      <div id="weatherResult" class="weather-result-area"></div>
+    </section>
+
+    <!-- ===== PAGE: BUDGET PLANNER ===== -->
+    <section class="page" id="page-budget">
+      <div class="page-header">
+        <h2>Budget Planner</h2>
+        <p>Plan your budget for the trip</p>
+      </div>
+      <div class="budget-layout">
+        <div class="budget-form-card">
+          <h3>Trip Details</h3>
+          <label>Destination</label>
+          <select class="form-select" id="budgetDest">
+            <option>Bali, Indonesia</option>
+            <option>Paris, France</option>
+            <option>Tokyo, Japan</option>
+            <option>Switzerland</option>
+            <option>Maldives</option>
+            <option>Dubai, UAE</option>
+          </select>
+          <label>Number of Days</label>
+          <select class="form-select" id="budgetDays">
+            <option>3 Days</option>
+            <option>5 Days</option>
+            <option>7 Days</option>
+            <option>10 Days</option>
+            <option>14 Days</option>
+          </select>
+          <label>Travelers</label>
+          <select class="form-select" id="budgetTravelers">
+            <option>Solo</option>
+            <option>2 Adults</option>
+            <option>Family (4)</option>
+            <option>Group (6+)</option>
+          </select>
+          <label>Budget Style</label>
+          <select class="form-select" id="budgetStyle">
+            <option>Budget</option>
+            <option>Mid-range</option>
+            <option>Luxury</option>
+          </select>
+          <label>Currency</label>
+          <select class="form-select" id="budgetCurrency">
+            <option>USD ($)</option>
+            <option>EUR (€)</option>
+            <option>INR (₹)</option>
+            <option>GBP (£)</option>
+          </select>
+          <button class="btn-primary w-full" id="calcBudgetBtn" style="margin-top:1rem">Calculate Budget</button>
+        </div>
+        <div class="budget-result-card" id="budgetResult">
+          <h3>Estimated Budget</h3>
+          <div id="budgetBreakdown"></div>
+          <div class="budget-total-row" style="margin-top:1.5rem">
+            <span>Total Estimate</span>
+            <span class="budget-total-amount" id="budgetGrandTotal">—</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: SAVED TRIPS ===== -->
+    <section class="page" id="page-saved">
+      <div class="page-header">
+        <h2>Saved Trips</h2>
+        <p>Your saved trips and itineraries</p>
+      </div>
+      <div class="saved-tabs">
+        <button class="tab-btn active" data-tab="saved-dest">Saved Destinations</button>
+        <button class="tab-btn" data-tab="saved-itin">Saved Itineraries</button>
+      </div>
+      <div class="tab-content active" id="saved-dest">
+        <div class="destinations-grid-full" id="savedDestGrid">
+          <div class="empty-state">
+            <i class="fa-regular fa-heart"></i>
+            <p>No saved destinations yet. Heart a destination to save it!</p>
+          </div>
+        </div>
+      </div>
+      <div class="tab-content" id="saved-itin">
+        <div id="savedItinList">
+          <div class="empty-state">
+            <i class="fa-solid fa-map"></i>
+            <p>No saved itineraries yet. Generate one and save it!</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PAGE: TRAVEL GUIDE ===== -->
+    <section class="page" id="page-guide">
+      <div class="page-header">
+        <h2>Travel Guide</h2>
+        <p>Travel tips, guides and information</p>
+      </div>
+      <div class="guide-tabs">
+        <button class="tab-btn active" data-gtab="All">All</button>
+        <button class="tab-btn" data-gtab="Tips">Tips</button>
+        <button class="tab-btn" data-gtab="Guides">Guides</button>
+        <button class="tab-btn" data-gtab="Packing">Packing</button>
+        <button class="tab-btn" data-gtab="Safety">Safety</button>
+        <button class="tab-btn" data-gtab="Culture">Culture</button>
+      </div>
+      <div class="guide-grid" id="guideGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- ===== DESTINATION DETAIL MODAL ===== -->
+  <div class="modal-overlay" id="destModal">
+    <div class="modal-box" id="destModalContent"></div>
+  </div>
+
+  <!-- ===== TOAST NOTIFICATION ===== -->
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // Load config from Vercel API (production) or local config.js (development)
+    async function loadConfig() {
+      try {
+        const res = await fetch('/api/config');
+        if (res.ok) {
+          const data = await res.json();
+          // Running on Vercel — use environment variables
+          window.CONFIG = {
+            WEATHER_API_KEY: data.WEATHER_API_KEY,
+            UNSPLASH_ACCESS_KEY: data.UNSPLASH_ACCESS_KEY,
+            GOOGLE_MAPS_KEY: data.GOOGLE_MAPS_KEY,
+          };
+        }
+      } catch (e) {
+        // Running locally — config.js already loaded
+      }
+    }
+    loadConfig();
+  </script>
+  <script src="config.js" onerror="console.log('Using Vercel config')"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

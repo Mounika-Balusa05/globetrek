@@ -1,11 +1,9 @@
 
-🔗 **[View Live →](https://globetrek-travel-explorer.netlify.app/)**
-
-
-
 # 🌍 GlobeTrek — Travel Explorer
 
-> **Explore smarter, plan better, travel easier**
+>🌐 **Live App** 👉 [Click Here](https://globetrek-travel-explorer.netlify.app/)
+
+## **Explore smarter, plan better, travel easier**
 
 GlobeTrek is a modern, fully responsive travel explorer web application that helps users discover beautiful destinations around the world, plan day-wise itineraries, estimate trip budgets, and explore real destination photos — all in one clean, intuitive interface.
 

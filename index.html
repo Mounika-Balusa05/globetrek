@@ -4,25 +4,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GlobeTrek — Explore smarter, plan better, travel easier</title>
-    <link rel="icon" type="image/png" href="./image.png">
-  <!-- Google Fonts: Poppins for headings, Inter for body -->
+  <link rel="icon" type="image/png" href="./image.png">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
-  <!-- Font Awesome icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="css/style2.css" />
 </head>
 <body>
 
-  <!-- ===================== SIDEBAR ===================== -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <i class="fa-solid fa-globe"></i>
       <span>GlobeTrek</span>
     </div>
-
     <nav class="sidebar-nav">
       <a href="#" class="nav-item active" data-page="explore">
         <i class="fa-solid fa-house"></i><span>Explore</span>
@@ -46,35 +40,26 @@
         <i class="fa-solid fa-book-open"></i><span>Travel Guide</span>
       </a>
     </nav>
-
-    <!-- Trending section in sidebar -->
     <div class="sidebar-trending">
       <p class="trending-label">Trending</p>
       <div class="trending-list" id="trendingList"></div>
     </div>
-
-    <!-- Sidebar promo card -->
     <div class="sidebar-promo">
       <p>Let's make your next adventure amazing!</p>
       <button class="btn-promo" onclick="showPage('explore')">Explore Now</button>
     </div>
   </aside>
 
-  <!-- ===================== MAIN CONTENT ===================== -->
   <main class="main-content" id="mainContent">
-
-    <!-- TOP NAVBAR -->
     <header class="topbar">
       <button class="menu-toggle" id="menuToggle">
         <i class="fa-solid fa-bars"></i>
       </button>
-
       <div class="search-box">
         <i class="fa-solid fa-magnifying-glass"></i>
         <input type="text" id="globalSearch" placeholder="Search destinations, places, activities..." />
         <button class="search-btn" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
       </div>
-
       <div class="topbar-actions">
         <button class="icon-btn" id="themeToggle" title="Toggle theme">
           <i class="fa-solid fa-sun" id="themeIcon"></i>
@@ -87,14 +72,9 @@
       </div>
     </header>
 
-    <!-- ===== PAGE: EXPLORE (HOME) ===== -->
     <section class="page active" id="page-explore">
-
-      <!-- HERO SECTION -->
       <div class="hero-section">
-        <div class="hero-slides" id="heroSlides">
-          <!-- Slides injected by JS -->
-        </div>
+        <div class="hero-slides" id="heroSlides"></div>
         <div class="hero-content">
           <p class="hero-eyebrow">✈ Your next journey starts here</p>
           <h1>Discover Your<br/>Next Adventure</h1>
@@ -103,8 +83,6 @@
         </div>
         <div class="hero-dots" id="heroDots"></div>
       </div>
-
-      <!-- POPULAR DESTINATIONS -->
       <div class="section-block">
         <div class="section-header">
           <h2>Popular Destinations</h2>
@@ -112,10 +90,7 @@
         </div>
         <div class="destinations-grid" id="popularDestinations"></div>
       </div>
-
-      <!-- BOTTOM WIDGETS ROW -->
       <div class="widgets-row">
-        <!-- Mini Weather Widget -->
         <div class="widget-card" id="miniWeatherWidget">
           <div class="widget-title">
             <i class="fa-solid fa-cloud-sun"></i>
@@ -125,8 +100,6 @@
             <div class="weather-loading">Loading weather...</div>
           </div>
         </div>
-
-        <!-- Itinerary Quick Start -->
         <div class="widget-card">
           <div class="widget-title">
             <i class="fa-solid fa-map-marked-alt"></i>
@@ -158,8 +131,6 @@
             <button class="btn-primary w-full" id="quickItineraryBtn">Generate Itinerary</button>
           </div>
         </div>
-
-        <!-- Budget Estimator -->
         <div class="widget-card">
           <div class="widget-title">
             <i class="fa-solid fa-calculator"></i>
@@ -174,7 +145,6 @@
       </div>
     </section>
 
-    <!-- ===== PAGE: DESTINATIONS ===== -->
     <section class="page" id="page-destinations">
       <div class="page-header">
         <h2>Destinations</h2>
@@ -209,7 +179,6 @@
       <div class="destinations-grid-full" id="destinationsGrid"></div>
     </section>
 
-    <!-- ===== PAGE: ITINERARY PLANNER ===== -->
     <section class="page" id="page-itinerary">
       <div class="page-header">
         <h2>Itinerary Planner</h2>
@@ -255,7 +224,6 @@
       </div>
     </section>
 
-    <!-- ===== PAGE: WEATHER ===== -->
     <section class="page" id="page-weather">
       <div class="page-header">
         <h2>Weather</h2>
@@ -268,7 +236,6 @@
       <div id="weatherResult" class="weather-result-area"></div>
     </section>
 
-    <!-- ===== PAGE: BUDGET PLANNER ===== -->
     <section class="page" id="page-budget">
       <div class="page-header">
         <h2>Budget Planner</h2>
@@ -327,7 +294,6 @@
       </div>
     </section>
 
-    <!-- ===== PAGE: SAVED TRIPS ===== -->
     <section class="page" id="page-saved">
       <div class="page-header">
         <h2>Saved Trips</h2>
@@ -355,7 +321,6 @@
       </div>
     </section>
 
-    <!-- ===== PAGE: TRAVEL GUIDE ===== -->
     <section class="page" id="page-guide">
       <div class="page-header">
         <h2>Travel Guide</h2>
@@ -374,36 +339,47 @@
 
   </main>
 
-  <!-- ===== DESTINATION DETAIL MODAL ===== -->
   <div class="modal-overlay" id="destModal">
     <div class="modal-box" id="destModalContent"></div>
   </div>
 
-  <!-- ===== TOAST NOTIFICATION ===== -->
   <div class="toast" id="toast"></div>
 
+  <!-- ===================== SCRIPTS ===================== -->
+  <!-- Step 1: Define empty CONFIG first so app never crashes -->
   <script>
-    // Load config from Vercel API (production) or local config.js (development)
-    async function loadConfig() {
+    window.CONFIG = {
+      WEATHER_API_KEY: "",
+      UNSPLASH_ACCESS_KEY: "",
+    };
+  </script>
+
+  <!-- Step 2: Load local config.js which overwrites CONFIG with real keys -->
+  <script src="config.js" onerror="console.log('No local config.js found')"></script>
+
+  <!-- Step 3: Load data and app -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Step 4: After app loads, try to get Vercel env vars and reinitialize -->
+  <script>
+    (async function() {
       try {
         const res = await fetch('/api/config');
         if (res.ok) {
           const data = await res.json();
-          // Running on Vercel — use environment variables
-          window.CONFIG = {
-            WEATHER_API_KEY: data.WEATHER_API_KEY,
-            UNSPLASH_ACCESS_KEY: data.UNSPLASH_ACCESS_KEY,
-            GOOGLE_MAPS_KEY: data.GOOGLE_MAPS_KEY,
-          };
+          if (data.WEATHER_API_KEY) {
+            window.CONFIG.WEATHER_API_KEY = data.WEATHER_API_KEY;
+            window.CONFIG.UNSPLASH_ACCESS_KEY = data.UNSPLASH_ACCESS_KEY;
+            // Refresh weather with real key
+            fetchWeatherWidget("Bali");
+          }
         }
       } catch (e) {
-        // Running locally — config.js already loaded
+        // Using local config.js — already working!
       }
-    }
-    loadConfig();
+    })();
   </script>
-  <script src="config.js" onerror="console.log('Using Vercel config')"></script>
-  <script src="js/data.js"></script>
-  <script src="js/app.js"></script>
+
 </body>
 </html>

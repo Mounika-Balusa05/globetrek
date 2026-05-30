@@ -86,11 +86,8 @@ No build steps, no npm install — pure HTML, CSS and JavaScript! ✅
 
 ## 👩‍💻 Author
 
-**Balusa Mounika**
-- 🎓 B.Tech Computer Science & Engineering — Final Year
-- 💼 GitHub: [@Mounika-Balusa05](https://github.com/Mounika-Balusa05)
-- 🔗 LinkedIn: [linkedin.com/in/your-profile](https://linkedin.com/in/your-profile)
+**Mounika Balusa**
+Full Stack Developer
+📍 Hyderabad, Telangana, India
 
----
-
-⭐ If you like this project, give it a star on GitHub!
+> Built with ❤️ as a portfolio project for internship and job applications | © 2026

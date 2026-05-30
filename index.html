@@ -27,9 +27,6 @@
       <a href="#" class="nav-item" data-page="itinerary">
         <i class="fa-solid fa-plane"></i><span>Itinerary Planner</span>
       </a>
-      <a href="#" class="nav-item" data-page="weather">
-        <i class="fa-solid fa-cloud-sun"></i><span>Weather</span>
-      </a>
       <a href="#" class="nav-item" data-page="budget">
         <i class="fa-solid fa-wallet"></i><span>Budget Planner</span>
       </a>
@@ -72,6 +69,7 @@
       </div>
     </header>
 
+    <!-- EXPLORE PAGE -->
     <section class="page active" id="page-explore">
       <div class="hero-section">
         <div class="hero-slides" id="heroSlides"></div>
@@ -91,15 +89,6 @@
         <div class="destinations-grid" id="popularDestinations"></div>
       </div>
       <div class="widgets-row">
-        <div class="widget-card" id="miniWeatherWidget">
-          <div class="widget-title">
-            <i class="fa-solid fa-cloud-sun"></i>
-            <span>Weather in <strong id="miniWeatherCity">Bali, Indonesia</strong></span>
-          </div>
-          <div class="mini-weather-content" id="miniWeatherContent">
-            <div class="weather-loading">Loading weather...</div>
-          </div>
-        </div>
         <div class="widget-card">
           <div class="widget-title">
             <i class="fa-solid fa-map-marked-alt"></i>
@@ -145,6 +134,7 @@
       </div>
     </section>
 
+    <!-- DESTINATIONS PAGE -->
     <section class="page" id="page-destinations">
       <div class="page-header">
         <h2>Destinations</h2>
@@ -179,6 +169,7 @@
       <div class="destinations-grid-full" id="destinationsGrid"></div>
     </section>
 
+    <!-- ITINERARY PAGE -->
     <section class="page" id="page-itinerary">
       <div class="page-header">
         <h2>Itinerary Planner</h2>
@@ -224,18 +215,7 @@
       </div>
     </section>
 
-    <section class="page" id="page-weather">
-      <div class="page-header">
-        <h2>Weather</h2>
-        <p>Check current weather and forecast</p>
-      </div>
-      <div class="weather-search-row">
-        <input type="text" id="weatherCity" class="form-input" placeholder="Search for a city..." value="Bali" />
-        <button class="btn-primary" id="weatherSearchBtn"><i class="fa-solid fa-magnifying-glass"></i></button>
-      </div>
-      <div id="weatherResult" class="weather-result-area"></div>
-    </section>
-
+    <!-- BUDGET PAGE -->
     <section class="page" id="page-budget">
       <div class="page-header">
         <h2>Budget Planner</h2>
@@ -294,6 +274,7 @@
       </div>
     </section>
 
+    <!-- SAVED TRIPS PAGE -->
     <section class="page" id="page-saved">
       <div class="page-header">
         <h2>Saved Trips</h2>
@@ -321,6 +302,7 @@
       </div>
     </section>
 
+    <!-- TRAVEL GUIDE PAGE -->
     <section class="page" id="page-guide">
       <div class="page-header">
         <h2>Travel Guide</h2>
@@ -345,41 +327,8 @@
 
   <div class="toast" id="toast"></div>
 
-  <!-- ===================== SCRIPTS ===================== -->
-  <!-- Step 1: Define empty CONFIG first so app never crashes -->
-  <script>
-    window.CONFIG = {
-      WEATHER_API_KEY: "",
-      UNSPLASH_ACCESS_KEY: "",
-    };
-  </script>
-
-  <!-- Step 2: Load local config.js which overwrites CONFIG with real keys -->
-  <script src="config.js" onerror="console.log('No local config.js found')"></script>
-
-  <!-- Step 3: Load data and app -->
   <script src="js/data.js"></script>
   <script src="js/app.js"></script>
-
-  <!-- Step 4: After app loads, try to get Vercel env vars and reinitialize -->
-  <script>
-    (async function() {
-      try {
-        const res = await fetch('/api/config');
-        if (res.ok) {
-          const data = await res.json();
-          if (data.WEATHER_API_KEY) {
-            window.CONFIG.WEATHER_API_KEY = data.WEATHER_API_KEY;
-            window.CONFIG.UNSPLASH_ACCESS_KEY = data.UNSPLASH_ACCESS_KEY;
-            // Refresh weather with real key
-            fetchWeatherWidget("Bali");
-          }
-        }
-      } catch (e) {
-        // Using local config.js — already working!
-      }
-    })();
-  </script>
 
 </body>
 </html>

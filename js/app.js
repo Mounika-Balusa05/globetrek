@@ -1,10 +1,8 @@
 // =============================================
 // GLOBETREK — MAIN APP LOGIC
-// Uses CONFIG from config.js for all API keys
 // =============================================
 
-const WEATHER_API_KEY = CONFIG.WEATHER_API_KEY;
-const WEATHER_BASE = "https://api.openweathermap.org/data/2.5";
+const UNSPLASH_ACCESS_KEY = "95V6FpPiKQ60o7MfAA3pSWM9yd2M2oSCxTgelyh4JFs";
 
 // =============================================
 // APP STATE
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderGuide("All");
   renderSavedPage();
   updateSavedBadge();
-  fetchWeatherWidget("Bali");
   bindEvents();
   startHeroAutoplay();
 });
@@ -58,10 +55,6 @@ function showPage(pageId) {
   });
   state.currentPage = pageId;
   document.getElementById("sidebar").classList.remove("open");
-  if (pageId === "weather") {
-    const city = document.getElementById("weatherCity").value || "Bali";
-    fetchWeatherFull(city);
-  }
 }
 
 // =============================================
@@ -160,7 +153,7 @@ function openDestModal(id) {
   const saved = state.savedDestinations.some(s => s.id === id);
   const modal = document.getElementById("destModal");
   const content = document.getElementById("destModalContent");
-  const mapsEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(d.name)}&output=embed&z=11`;
+  const mapsUrl = `https://maps.google.com/maps?q=${encodeURIComponent(d.name)}&output=embed&z=11`;
 
   content.innerHTML = `
     <div class="modal-hero">
@@ -219,7 +212,7 @@ function openDestModal(id) {
           <iframe width="100%" height="280"
             style="border:0;border-radius:var(--radius-md);"
             loading="lazy" allowfullscreen
-            src="${mapsEmbedUrl}">
+            src="${mapsUrl}">
           </iframe>
         </div>
         <p style="font-size:0.78rem;color:var(--text-secondary);margin-top:0.75rem">
@@ -283,7 +276,7 @@ async function loadGallery(destName) {
   try {
     const res = await fetch(
       `https://api.unsplash.com/search/photos?query=${encodeURIComponent(destName)}&per_page=9&orientation=landscape`,
-      { headers: { Authorization: `Client-ID ${CONFIG.UNSPLASH_ACCESS_KEY}` } }
+      { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } }
     );
     if (!res.ok) throw new Error("Unsplash error");
     const data = await res.json();
@@ -422,121 +415,6 @@ function deleteSavedItin(idx) {
   localStorage.setItem("gt_itins", JSON.stringify(state.savedItineraries));
   renderSavedPage();
   showToast("Itinerary deleted");
-}
-
-// =============================================
-// WEATHER — REAL OPENWEATHER API
-// =============================================
-async function fetchWeatherWidget(city) {
-  const el = document.getElementById("miniWeatherContent");
-  const cityLabel = document.getElementById("miniWeatherCity");
-  if (!el) return;
-  el.innerHTML = `<div class="weather-loading"><div class="spinner"></div> Loading...</div>`;
-  try {
-    const [wRes, fRes] = await Promise.all([
-      fetch(`${WEATHER_BASE}/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`),
-      fetch(`${WEATHER_BASE}/forecast?q=${city}&appid=${WEATHER_API_KEY}&units=metric&cnt=35`)
-    ]);
-    if (!wRes.ok) throw new Error("City not found");
-    const w = await wRes.json();
-    const f = await fRes.json();
-    if (cityLabel) cityLabel.textContent = `${w.name}, ${w.sys.country}`;
-    const daily = getDailyForecasts(f.list);
-    const icon = getWeatherIcon(w.weather[0].id);
-    el.innerHTML = `
-      <div class="mini-weather-main">
-        <span class="weather-icon-big">${icon}</span>
-        <div>
-          <div class="weather-temp">${Math.round(w.main.temp)}°C</div>
-          <div class="weather-desc">${w.weather[0].description}</div>
-        </div>
-      </div>
-      <div class="weather-meta">
-        <span>Humidity <strong>${w.main.humidity}%</strong></span>
-        <span>Wind <strong>${Math.round(w.wind.speed * 3.6)} km/h</strong></span>
-        <span>Feels like <strong>${Math.round(w.main.feels_like)}°C</strong></span>
-        <span>Pressure <strong>${w.main.pressure} hPa</strong></span>
-      </div>
-      <div class="weather-forecast">
-        ${daily.slice(0, 5).map(d => `
-          <div class="forecast-day">
-            <span>${d.day}</span>
-            <span class="f-icon">${getWeatherIcon(d.code)}</span>
-            <span class="f-temp">${d.high}°</span>
-            <span class="f-low">${d.low}°</span>
-          </div>
-        `).join("")}
-      </div>
-    `;
-  } catch (err) {
-    el.innerHTML = `<div class="weather-loading">⚠️ ${err.message}. Check your API key.</div>`;
-  }
-}
-
-async function fetchWeatherFull(city) {
-  const el = document.getElementById("weatherResult");
-  if (!el) return;
-  el.innerHTML = `<div class="weather-loading"><div class="spinner"></div> Fetching weather for ${city}...</div>`;
-  try {
-    const [wRes, fRes] = await Promise.all([
-      fetch(`${WEATHER_BASE}/weather?q=${city}&appid=${WEATHER_API_KEY}&units=metric`),
-      fetch(`${WEATHER_BASE}/forecast?q=${city}&appid=${WEATHER_API_KEY}&units=metric&cnt=35`)
-    ]);
-    if (!wRes.ok) throw new Error("City not found");
-    const w = await wRes.json();
-    const f = await fRes.json();
-    const daily = getDailyForecasts(f.list);
-    const icon = getWeatherIcon(w.weather[0].id);
-    const now = new Date();
-    el.innerHTML = `
-      <div class="weather-main-card">
-        <div class="weather-city-name">${w.name}, ${w.sys.country}</div>
-        <div class="weather-date">${now.toLocaleDateString('en-US', { weekday:'long', year:'numeric', month:'long', day:'numeric' })}</div>
-        <div class="weather-big-row">
-          <span class="weather-icon-xl">${icon}</span>
-          <div>
-            <div class="weather-temp-xl">${Math.round(w.main.temp)}°C</div>
-            <div class="weather-desc-lg">${w.weather[0].description}</div>
-          </div>
-        </div>
-        <div class="weather-stats">
-          <div class="weather-stat"><div class="weather-stat-label">Humidity</div><div class="weather-stat-val">${w.main.humidity}%</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Wind</div><div class="weather-stat-val">${Math.round(w.wind.speed * 3.6)} km/h</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Feels Like</div><div class="weather-stat-val">${Math.round(w.main.feels_like)}°C</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Pressure</div><div class="weather-stat-val">${w.main.pressure} hPa</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Visibility</div><div class="weather-stat-val">${(w.visibility/1000).toFixed(1)} km</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Clouds</div><div class="weather-stat-val">${w.clouds.all}%</div></div>
-        </div>
-        <div class="forecast-row">
-          ${daily.slice(0, 5).map(d => `
-            <div class="forecast-item">
-              <div class="forecast-item-day">${d.day}</div>
-              <div class="forecast-item-icon">${getWeatherIcon(d.code)}</div>
-              <div class="forecast-item-high">${d.high}°</div>
-              <div class="forecast-item-low">${d.low}°</div>
-            </div>
-          `).join("")}
-        </div>
-      </div>
-    `;
-  } catch (err) {
-    el.innerHTML = `<div class="weather-loading">⚠️ Could not find "${city}". Try another city name.</div>`;
-  }
-}
-
-function getDailyForecasts(list) {
-  const map = {};
-  list.forEach(item => {
-    const date = new Date(item.dt * 1000);
-    const key = date.toDateString();
-    if (!map[key]) {
-      map[key] = { day: DAYS[date.getDay()], high: item.main.temp_max, low: item.main.temp_min, code: item.weather[0].id };
-    } else {
-      map[key].high = Math.max(map[key].high, item.main.temp_max);
-      map[key].low = Math.min(map[key].low, item.main.temp_min);
-    }
-  });
-  return Object.values(map).map(d => ({ ...d, high: Math.round(d.high), low: Math.round(d.low) }));
 }
 
 // =============================================
@@ -729,7 +607,7 @@ function initScrollTop() {
 }
 
 // =============================================
-// DYNAMIC SEARCH — ANY DESTINATION IN THE WORLD
+// DYNAMIC SEARCH
 // =============================================
 async function searchAnyDestination(query) {
   if (!query.trim()) return;
@@ -742,7 +620,6 @@ async function searchAnyDestination(query) {
     openDestModal(existing.id);
     return;
   }
-  // Reset filters
   const filterCategory = document.getElementById("filterCategory");
   const filterCountry = document.getElementById("filterCountry");
   if (filterCategory) filterCategory.value = "All Categories";
@@ -770,10 +647,7 @@ async function showDynamicSearchResult(query) {
   `;
 
   try {
-    const [photos, weather] = await Promise.all([
-      fetchUnsplashSearch(query),
-      fetchWeatherSearch(query)
-    ]);
+    const photos = await fetchUnsplashSearch(query);
 
     if (!photos.length) {
       grid.innerHTML = `
@@ -799,7 +673,7 @@ async function showDynamicSearchResult(query) {
         <div class="dest-card-overlay"></div>
         <div class="dest-card-info">
           <div class="dest-card-name">${query}</div>
-          ${weather && i === 0 ? `<div class="dest-card-rating">${getWeatherIcon(weather.weather[0].id)} ${Math.round(weather.main.temp)}°C</div>` : '<div class="dest-card-rating">🌍 Explore</div>'}
+          <div class="dest-card-rating">🌍 Explore</div>
           <span class="dest-card-tag">Discovery</span>
         </div>
       </div>
@@ -813,31 +687,11 @@ async function showDynamicSearchResult(query) {
             Search results for "<strong>${query}</strong>" — ${photos.length} photos found
           </span>
         </div>
-        ${weather ? `
-        <div class="widget-card" style="margin-bottom:1.5rem;max-width:400px">
-          <div class="widget-title">
-            <i class="fa-solid fa-cloud-sun"></i>
-            <span>Current Weather in ${weather.name}, ${weather.sys.country}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:16px;margin-top:0.5rem">
-            <span style="font-size:2.5rem">${getWeatherIcon(weather.weather[0].id)}</span>
-            <div>
-              <div style="font-size:1.8rem;font-weight:700;font-family:'Poppins',sans-serif">${Math.round(weather.main.temp)}°C</div>
-              <div style="font-size:0.85rem;color:var(--text-secondary)">${weather.weather[0].description} · Humidity ${weather.main.humidity}%</div>
-            </div>
-          </div>
-        </div>
-        ` : ''}
       </div>
       ${cards}
     `;
   } catch (err) {
-    grid.innerHTML = `
-      <div class="empty-state" style="grid-column:1/-1">
-        <i class="fa-solid fa-triangle-exclamation"></i>
-        <p>Something went wrong. Please try again!</p>
-      </div>
-    `;
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><i class="fa-solid fa-triangle-exclamation"></i><p>Something went wrong. Please try again!</p></div>`;
   }
 }
 
@@ -845,25 +699,13 @@ async function fetchUnsplashSearch(query) {
   try {
     const res = await fetch(
       `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=9&orientation=landscape`,
-      { headers: { Authorization: `Client-ID ${CONFIG.UNSPLASH_ACCESS_KEY}` } }
+      { headers: { Authorization: `Client-ID ${UNSPLASH_ACCESS_KEY}` } }
     );
     if (!res.ok) throw new Error("Unsplash error");
     const data = await res.json();
     return data.results || [];
   } catch (err) {
     return [];
-  }
-}
-
-async function fetchWeatherSearch(query) {
-  try {
-    const res = await fetch(
-      `${WEATHER_BASE}/weather?q=${encodeURIComponent(query)}&appid=${WEATHER_API_KEY}&units=metric`
-    );
-    if (!res.ok) return null;
-    return await res.json();
-  } catch (err) {
-    return null;
   }
 }
 
@@ -885,14 +727,13 @@ function openDynamicModal(encodedQuery, imgUrl, fullImgUrl, photographer) {
     <div class="modal-tabs">
       <button class="modal-tab-btn active" data-mtab="overview">Overview</button>
       <button class="modal-tab-btn" data-mtab="gallery">Gallery</button>
-      <button class="modal-tab-btn" data-mtab="weather">Weather</button>
       <button class="modal-tab-btn" data-mtab="map">Map</button>
     </div>
     <div class="modal-body" style="padding-top:0">
       <div class="modal-tab-panel active" id="mtab-overview">
         <div class="modal-section">
           <h4>About</h4>
-          <p>You searched for <strong>${query}</strong>. Explore real photos, live weather, and an interactive map of this destination using our API integrations.</p>
+          <p>You searched for <strong>${query}</strong>. Explore real photos and an interactive map of this destination.</p>
         </div>
         <div class="modal-section">
           <h4>Photo Credit</h4>
@@ -913,11 +754,6 @@ function openDynamicModal(encodedQuery, imgUrl, fullImgUrl, photographer) {
         <p style="font-size:0.68rem;color:var(--text-muted);margin-top:8px;text-align:right">
           Photos from <a href="https://unsplash.com" target="_blank" style="color:var(--accent)">Unsplash</a>
         </p>
-      </div>
-      <div class="modal-tab-panel" id="mtab-weather">
-        <div id="dynamicWeatherResult">
-          <div class="weather-loading"><div class="spinner"></div><span>Loading weather for ${query}...</span></div>
-        </div>
       </div>
       <div class="modal-tab-panel" id="mtab-map">
         <div style="border-radius:var(--radius-md);overflow:hidden;height:280px;">
@@ -950,7 +786,6 @@ function openDynamicModal(encodedQuery, imgUrl, fullImgUrl, photographer) {
       const tabId = "mtab-" + btn.dataset.mtab;
       document.getElementById(tabId)?.classList.add("active");
       if (btn.dataset.mtab === "gallery") loadGallery(query);
-      if (btn.dataset.mtab === "weather") loadDynamicWeather(query);
     });
   });
 
@@ -958,52 +793,6 @@ function openDynamicModal(encodedQuery, imgUrl, fullImgUrl, photographer) {
   document.body.style.overflow = "hidden";
 }
 
-async function loadDynamicWeather(query) {
-  const el = document.getElementById("dynamicWeatherResult");
-  if (!el) return;
-  try {
-    const res = await fetch(`${WEATHER_BASE}/weather?q=${encodeURIComponent(query)}&appid=${WEATHER_API_KEY}&units=metric`);
-    if (!res.ok) throw new Error("City not found");
-    const w = await res.json();
-    const fRes = await fetch(`${WEATHER_BASE}/forecast?q=${encodeURIComponent(query)}&appid=${WEATHER_API_KEY}&units=metric&cnt=35`);
-    const f = await fRes.json();
-    const daily = getDailyForecasts(f.list);
-    const icon = getWeatherIcon(w.weather[0].id);
-    el.innerHTML = `
-      <div class="weather-main-card">
-        <div class="weather-city-name">${w.name}, ${w.sys.country}</div>
-        <div class="weather-big-row" style="margin:1rem 0">
-          <span class="weather-icon-xl">${icon}</span>
-          <div>
-            <div class="weather-temp-xl">${Math.round(w.main.temp)}°C</div>
-            <div class="weather-desc-lg">${w.weather[0].description}</div>
-          </div>
-        </div>
-        <div class="weather-stats">
-          <div class="weather-stat"><div class="weather-stat-label">Humidity</div><div class="weather-stat-val">${w.main.humidity}%</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Wind</div><div class="weather-stat-val">${Math.round(w.wind.speed * 3.6)} km/h</div></div>
-          <div class="weather-stat"><div class="weather-stat-label">Feels Like</div><div class="weather-stat-val">${Math.round(w.main.feels_like)}°C</div></div>
-        </div>
-        <div class="forecast-row">
-          ${daily.slice(0, 5).map(d => `
-            <div class="forecast-item">
-              <div class="forecast-item-day">${d.day}</div>
-              <div class="forecast-item-icon">${getWeatherIcon(d.code)}</div>
-              <div class="forecast-item-high">${d.high}°</div>
-              <div class="forecast-item-low">${d.low}°</div>
-            </div>
-          `).join("")}
-        </div>
-      </div>
-    `;
-  } catch (err) {
-    el.innerHTML = `<div class="weather-loading">⚠️ Weather not found for "${query}".</div>`;
-  }
-}
-
-// =============================================
-// SAVE DYNAMIC DESTINATION
-// =============================================
 function saveDynamicDest(name, img) {
   const alreadySaved = state.savedDestinations.some(d => d.name === name);
   if (alreadySaved) {
@@ -1037,7 +826,7 @@ function saveDynamicDest(name, img) {
 }
 
 // =============================================
-// BIND ALL EVENTS — SINGLE PLACE, NO DUPLICATES
+// BIND ALL EVENTS
 // =============================================
 function bindEvents() {
   document.getElementById("themeToggle").addEventListener("click", () => {
@@ -1053,12 +842,8 @@ function bindEvents() {
     item.addEventListener("click", (e) => { e.preventDefault(); showPage(item.dataset.page); });
   });
 
-  // *** FIXED: search now calls searchAnyDestination ***
   document.getElementById("globalSearch").addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      searchAnyDestination(e.target.value);
-    }
+    if (e.key === "Enter") { e.preventDefault(); searchAnyDestination(e.target.value); }
     if (e.key === "Escape") removeDropdown();
   });
 
@@ -1089,14 +874,6 @@ function bindEvents() {
   });
 
   document.getElementById("generateItinBtn")?.addEventListener("click", renderItinerary);
-
-  document.getElementById("weatherSearchBtn")?.addEventListener("click", () => {
-    fetchWeatherFull(document.getElementById("weatherCity").value);
-  });
-  document.getElementById("weatherCity")?.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") fetchWeatherFull(e.target.value);
-  });
-
   document.getElementById("calcBudgetBtn")?.addEventListener("click", calculateBudget);
 
   document.getElementById("destModal")?.addEventListener("click", (e) => {
